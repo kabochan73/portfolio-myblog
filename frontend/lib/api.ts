@@ -1,7 +1,7 @@
 import { cacheLife, cacheTag } from 'next/cache'
 import type { Post, Tag } from '@/types'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+const API_URL = process.env.API_URL
 
 // 記事一覧取得（タグフィルタ対応）
 export async function getPosts(tagSlug?: string): Promise<Post[]> {
