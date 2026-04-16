@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { useState } from 'react'
 import type { Post, Tag } from '@/types'
 
@@ -11,14 +10,24 @@ type Props = {
 
 export default function PostListWithSearch({ posts, tags }: Props) {
   const [query, setQuery] = useState('')
+  const [selectedTagId, setSelectedTagId] = useState<number | null>(null)
 
-  const filtered = query.trim()
-    ? posts.filter(
-        (post) =>
-          post.title.toLowerCase().includes(query.toLowerCase()) ||
-          post.body.toLowerCase().includes(query.toLowerCase())
-      )
-    : posts
+  const filtered = posts.filter((post) => {
+    const matchesQuery =
+      !query.trim() ||
+      post.title.toLowerCase().includes(query.toLowerCase()) ||
+      post.body.toLowerCase().includes(query.toLowerCase())
+
+    const matchesTag =
+      !selectedTagId ||
+      post.tags.some((tag) => tag.id === selectedTagId)
+
+    return matchesQuery && matchesTag
+  })
+
+  function toggleTag(id: number) {
+    setSelectedTagId((prev) => (prev === id ? null : id))
+  }
 
   return (
     <div className="space-y-8">
@@ -36,37 +45,40 @@ export default function PostListWithSearch({ posts, tags }: Props) {
         <section>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <Link
+              <button
                 key={tag.id}
-                href={`/tags/${tag.slug}`}
+                type="button"
+                onClick={() => toggleTag(tag.id)}
                 className="rounded-full border px-3 py-1 text-sm text-white transition-opacity hover:opacity-80"
-                style={{ backgroundColor: tag.color, borderColor: tag.color }}
+                style={{
+                  backgroundColor: tag.color,
+                  borderColor: tag.color,
+                  opacity: selectedTagId === null || selectedTagId === tag.id ? 1 : 0.35,
+                }}
               >
                 {tag.name}
-              </Link>
+              </button>
             ))}
           </div>
         </section>
       )}
 
-      {/* 検索結果ラベル */}
-      {query.trim() && (
+      {/* 絞り込み中のラベル */}
+      {(query.trim() || selectedTagId) && (
         <p className="text-sm text-gray-500">
-          「<span className="font-medium text-gray-900">{query}</span>」の検索結果 — {filtered.length} 件
+          {filtered.length} 件
         </p>
       )}
 
       {/* 記事一覧 */}
       <section>
         {filtered.length === 0 ? (
-          <p className="text-gray-500">
-            {query ? '記事が見つかりませんでした。' : 'まだ記事がありません。'}
-          </p>
+          <p className="text-gray-500">記事が見つかりませんでした。</p>
         ) : (
           <ul className="space-y-8">
             {filtered.map((post) => (
               <li key={post.id}>
-                <Link href={`/posts/${post.slug}`} className="group block">
+                <a href={`/posts/${post.slug}`} className="group block">
                   <article className="space-y-2">
                     <h2 className="text-xl font-bold text-gray-900 group-hover:text-gray-600">
                       {post.title}
@@ -90,7 +102,7 @@ export default function PostListWithSearch({ posts, tags }: Props) {
                       )}
                     </div>
                   </article>
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
