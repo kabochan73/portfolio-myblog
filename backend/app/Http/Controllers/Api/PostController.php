@@ -21,6 +21,12 @@ class PostController extends Controller
             $query->whereHas('tags', fn($q) => $q->where('slug', $request->tag));
         }
 
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(fn($q) => $q->where('title', 'like', "%{$search}%")
+                ->orWhere('body', 'like', "%{$search}%"));
+        }
+
         return response()->json($query->get());
     }
 
