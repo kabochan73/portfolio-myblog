@@ -57,12 +57,12 @@ export default function AdminPostsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">記事管理</h1>
-        <Link
-          href="/admin/posts/new"
+        <button
+          onClick={() => { router.refresh(); router.push('/admin/posts/new') }}
           className="rounded bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-700"
         >
           新規作成
-        </Link>
+        </button>
       </div>
 
       {posts.length === 0 ? (
