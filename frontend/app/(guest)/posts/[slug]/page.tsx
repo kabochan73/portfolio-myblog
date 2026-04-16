@@ -1,12 +1,11 @@
 import Link from 'next/link'
+import { Suspense } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { getPost } from '@/lib/api'
 import { notFound } from 'next/navigation'
 
-export default async function PostPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+async function PostContent({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
   let post
@@ -18,7 +17,6 @@ export default async function PostPage({
 
   return (
     <article className="space-y-8">
-      {/* ヘッダー */}
       <header className="space-y-4">
         <h1 className="text-3xl font-bold text-gray-900">{post.title}</h1>
         <div className="flex items-center gap-4">
@@ -44,17 +42,29 @@ export default async function PostPage({
 
       <hr className="border-gray-200" />
 
-      {/* 本文 */}
       <div className="prose prose-gray max-w-none">
-        {post.body}
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {post.body}
+        </ReactMarkdown>
       </div>
 
-      {/* 戻るリンク */}
       <div className="pt-4">
         <Link href="/" className="text-sm text-gray-500 hover:text-gray-900">
           ← 一覧に戻る
         </Link>
       </div>
     </article>
+  )
+}
+
+export default function PostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  return (
+    <Suspense>
+      <PostContent params={params} />
+    </Suspense>
   )
 }

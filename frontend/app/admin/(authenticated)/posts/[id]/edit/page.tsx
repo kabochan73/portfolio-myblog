@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { revalidatePosts } from '@/lib/revalidate'
+import MarkdownEditor from '@/components/MarkdownEditor'
 import type { Post, Tag } from '@/types'
 
 export default function EditPostPage({
@@ -133,14 +134,8 @@ export default function EditPostPage({
         </div>
 
         <div className="space-y-1">
-          <label className="text-sm text-gray-700">本文</label>
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            required
-            rows={15}
-            className="w-full rounded border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-900"
-          />
+          <label className="text-sm text-gray-700">本文（Markdown）</label>
+          <MarkdownEditor value={body} onChange={setBody} />
         </div>
 
         <label className="flex items-center gap-2 text-sm text-gray-700">
