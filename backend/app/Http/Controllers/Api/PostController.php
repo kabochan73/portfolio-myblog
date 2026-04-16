@@ -35,6 +35,15 @@ class PostController extends Controller
         return response()->json($post);
     }
 
+    public function adminIndex(): JsonResponse
+    {
+        $posts = Post::with('tags')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return response()->json($posts);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
