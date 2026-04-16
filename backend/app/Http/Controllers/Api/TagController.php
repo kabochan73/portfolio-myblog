@@ -20,6 +20,7 @@ class TagController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:50|unique:tags,name',
             'slug' => 'nullable|string|unique:tags,slug',
+            'color' => 'nullable|string|regex:/^#[0-9A-Fa-f]{6}$/',
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
