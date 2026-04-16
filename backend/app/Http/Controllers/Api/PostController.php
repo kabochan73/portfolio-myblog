@@ -44,6 +44,17 @@ class PostController extends Controller
     public function adminIndex(): JsonResponse
     {
         $posts = Post::with('tags')
+            ->whereNotNull('published_at')
+            ->orderByDesc('published_at')
+            ->get();
+
+        return response()->json($posts);
+    }
+
+    public function adminDrafts(): JsonResponse
+    {
+        $posts = Post::with('tags')
+            ->whereNull('published_at')
             ->orderByDesc('created_at')
             ->get();
 

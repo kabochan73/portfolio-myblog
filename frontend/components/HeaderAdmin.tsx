@@ -28,6 +28,9 @@ export default function HeaderAdmin() {
           <Link href="/admin/posts" className="text-sm text-gray-600 hover:text-gray-900">
             記事管理
           </Link>
+          <Link href="/admin/posts/drafts" className="text-sm text-gray-600 hover:text-gray-900">
+            下書き
+          </Link>
           <Link href="/admin/tags" className="text-sm text-gray-600 hover:text-gray-900">
             タグ管理
           </Link>

@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
 
     Route::get('/admin/posts', [App\Http\Controllers\Api\PostController::class, 'adminIndex']);
+    Route::get('/admin/posts/drafts', [App\Http\Controllers\Api\PostController::class, 'adminDrafts']);
     Route::post('/admin/posts', [App\Http\Controllers\Api\PostController::class, 'store']);
     Route::put('/admin/posts/{id}', [App\Http\Controllers\Api\PostController::class, 'update']);
     Route::delete('/admin/posts/{id}', [App\Http\Controllers\Api\PostController::class, 'destroy']);
